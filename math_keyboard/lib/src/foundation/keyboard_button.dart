@@ -160,12 +160,10 @@ final functionKeyboard = [
     const BasicKeyboardButtonConfig(
       label: r'\>',
       value: r'\>',
-      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'\<',
       value: r'\<',
-      asTex: true,
     ),
   ],
   [
@@ -196,6 +194,24 @@ final functionKeyboard = [
       value: r'\le',
       asTex: true,
     ),
+  ],
+  [
+    const PageButtonConfig(flex: 3),
+    const BasicKeyboardButtonConfig(
+      label: '(',
+      value: '(',
+      highlighted: true,
+      keyboardCharacters: ['('],
+    ),
+    const BasicKeyboardButtonConfig(
+      label: ')',
+      value: ')',
+      highlighted: true,
+      keyboardCharacters: [')'],
+    ),
+    PreviousButtonConfig(),
+    NextButtonConfig(),
+    DeleteButtonConfig(),
   ],
 ];
 
