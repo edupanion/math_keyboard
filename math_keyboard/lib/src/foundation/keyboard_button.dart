@@ -235,7 +235,6 @@ final standardKeyboard = [
       args: [TeXArg.braces, TeXArg.braces],
       highlighted: true,
     ),
-    _subtractButton,
   ],
   [
     _digitButtons[4],
@@ -248,7 +247,6 @@ final standardKeyboard = [
       highlighted: true,
     ),
     _subtractButton,
-    _subtractButton,
   ],
   [
     _digitButtons[1],
@@ -256,7 +254,6 @@ final standardKeyboard = [
     _digitButtons[3],
     _decimalButton,
     DeleteButtonConfig(),
-    _subtractButton,
   ],
   [
     const PageButtonConfig(),
@@ -264,7 +261,6 @@ final standardKeyboard = [
     PreviousButtonConfig(),
     NextButtonConfig(),
     SubmitButtonConfig(),
-    _subtractButton,
   ],
 ];
 

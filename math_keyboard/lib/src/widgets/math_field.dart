@@ -144,15 +144,9 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
       );
   late var _controller = widget.controller ?? MathFieldEditingController();
 
-  List<String> get _variables => [
-        r'\pi',
-        'e',
-        ...widget.variables,
-      ];
+  List<String> get _variables => [...widget.variables, r'\infty'];
 
-  bool get _isKeyboardShown =>
-      _overlayEntry != null &&
-      _keyboardSlideController.status != AnimationStatus.dismissed;
+  bool get _isKeyboardShown => _overlayEntry != null && _keyboardSlideController.status != AnimationStatus.dismissed;
 
   @override
   void initState() {
@@ -369,8 +363,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
     }
 
     final configs = <List<KeyboardButtonConfig>>[
-      if (widget.keyboardType ==
-          MathKeyboardType.expression) ...<List<KeyboardButtonConfig>>[
+      if (widget.keyboardType == MathKeyboardType.expression) ...<List<KeyboardButtonConfig>>[
         ...standardKeyboard,
         ...functionKeyboard,
       ] else if (widget.keyboardType == MathKeyboardType.numberOnly) ...[
@@ -396,8 +389,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   ///
   /// Returns `null` if not handled (indecisive) and a [KeyEventResult] if we
   /// can conclude about the complete key handling from the action taken.
-  KeyEventResult? _handleCharacter(
-      String? character, List<KeyboardButtonConfig> configs) {
+  KeyEventResult? _handleCharacter(String? character, List<KeyboardButtonConfig> configs) {
     if (character == null) return null;
     final lowerCaseCharacter = character.toLowerCase();
 
@@ -406,8 +398,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
       if (config is! BasicKeyboardButtonConfig) continue;
       if (config.keyboardCharacters.isEmpty) continue;
 
-      if (config.keyboardCharacters
-          .any((element) => element.toLowerCase() == lowerCaseCharacter)) {
+      if (config.keyboardCharacters.any((element) => element.toLowerCase() == lowerCaseCharacter)) {
         final basicConfig = config;
         if (basicConfig.args != null) {
           _controller.addFunction(basicConfig.value, basicConfig.args!);
@@ -449,29 +440,21 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   ///
   /// Returns `null` if not handled (indecisive) and a [KeyEventResult] if we
   /// can conclude about the complete key handling from the action taken.
-  KeyEventResult? _handleLogicalKey(
-      LogicalKeyboardKey logicalKey, List<KeyboardButtonConfig> configs) {
+  KeyEventResult? _handleLogicalKey(LogicalKeyboardKey logicalKey, List<KeyboardButtonConfig> configs) {
     // Check logical, fixed keyboard bindings (like backspace and arrow keys).
-    if (logicalKey == LogicalKeyboardKey.backspace &&
-        configs.any((element) => element is DeleteButtonConfig)) {
+    if (logicalKey == LogicalKeyboardKey.backspace && configs.any((element) => element is DeleteButtonConfig)) {
       _controller.goBack(deleteMode: true);
       return KeyEventResult.handled;
     }
-    if ((logicalKey == LogicalKeyboardKey.arrowRight ||
-            logicalKey == LogicalKeyboardKey.arrowDown) &&
-        configs.any((element) => element is NextButtonConfig)) {
+    if ((logicalKey == LogicalKeyboardKey.arrowRight || logicalKey == LogicalKeyboardKey.arrowDown) && configs.any((element) => element is NextButtonConfig)) {
       _controller.goNext();
       return KeyEventResult.handled;
     }
-    if ((logicalKey == LogicalKeyboardKey.arrowLeft ||
-            logicalKey == LogicalKeyboardKey.arrowUp) &&
-        configs.any((element) => element is PreviousButtonConfig)) {
+    if ((logicalKey == LogicalKeyboardKey.arrowLeft || logicalKey == LogicalKeyboardKey.arrowUp) && configs.any((element) => element is PreviousButtonConfig)) {
       _controller.goBack();
       return KeyEventResult.handled;
     }
-    if ((logicalKey == LogicalKeyboardKey.enter ||
-            logicalKey == LogicalKeyboardKey.numpadEnter) &&
-        configs.any((element) => element is SubmitButtonConfig)) {
+    if ((logicalKey == LogicalKeyboardKey.enter || logicalKey == LogicalKeyboardKey.numpadEnter) && configs.any((element) => element is SubmitButtonConfig)) {
       _submit();
       return KeyEventResult.handled;
     }
@@ -498,8 +481,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
           // software keyboard from showing when a key on the physical keyboard
           // is pressed. See https://github.com/flutter/flutter/issues/44681.
           // todo: fix the problem once we have an update on flutter/flutter#44681.
-          onFocusChange: (primary) =>
-              _handleFocusChanged(context, open: primary),
+          onFocusChange: (primary) => _handleFocusChanged(context, open: primary),
           onKey: _handleKey,
           child: GestureDetector(
             onTap: () {
@@ -519,8 +501,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
                   scrollController: _scrollController,
                   cursorOpacity: _cursorOpacity,
                   hasFocus: _focusNode.hasFocus,
-                  decoration: widget.decoration
-                      .applyDefaults(Theme.of(context).inputDecorationTheme),
+                  decoration: widget.decoration.applyDefaults(Theme.of(context).inputDecorationTheme),
                 );
               },
             ),
@@ -566,8 +547,7 @@ class _FieldPreview extends StatelessWidget {
     }
 
     if (decoration.fillColor != null) {
-      return Color.alphaBlend(
-          decoration.fillColor!, themeData.colorScheme.surface);
+      return Color.alphaBlend(decoration.fillColor!, themeData.colorScheme.surface);
     }
 
     // dark theme: 10% white (enabled), 5% white (disabled)
@@ -591,12 +571,7 @@ class _FieldPreview extends StatelessWidget {
 
   // Adapted from InputDecorator._getInlineStyle.
   TextStyle _getHintStyle(ThemeData themeData) {
-    return themeData.textTheme.titleMedium!
-        .copyWith(
-            color: decoration.enabled
-                ? themeData.hintColor
-                : themeData.disabledColor)
-        .merge(decoration.hintStyle);
+    return themeData.textTheme.titleMedium!.copyWith(color: decoration.enabled ? themeData.hintColor : themeData.disabledColor).merge(decoration.hintStyle);
   }
 
   @override
@@ -605,8 +580,7 @@ class _FieldPreview extends StatelessWidget {
         .buildTeXString(
           cursorColor: Color.lerp(
             _getDisabledCursorColor(Theme.of(context)),
-            Theme.of(context).textSelectionTheme.cursorColor ??
-                Theme.of(context).colorScheme.secondary,
+            Theme.of(context).textSelectionTheme.cursorColor ?? Theme.of(context).colorScheme.secondary,
             cursorOpacity,
           ),
         )
@@ -718,8 +692,7 @@ class MathFieldEditingController extends ChangeNotifier {
 
   /// Navigate to the previous node.
   void goBack({bool deleteMode = false}) {
-    final state =
-        deleteMode ? currentNode.remove() : currentNode.shiftCursorLeft();
+    final state = deleteMode ? currentNode.remove() : currentNode.shiftCursorLeft();
     switch (state) {
       // CASE 1: Courser was moved 1 position to the left in the current node.
       case NavigationState.success:
@@ -795,8 +768,7 @@ class MathFieldEditingController extends ChangeNotifier {
         // after the function.
         if (nextArg >= parent.argNodes.length) {
           currentNode = parent.parent;
-          currentNode.courserPosition =
-              currentNode.children.indexOf(parent) + 1;
+          currentNode.courserPosition = currentNode.children.indexOf(parent) + 1;
           currentNode.setCursor();
         } else {
           currentNode = currentNode.parent!.argNodes[nextArg];
@@ -846,8 +818,7 @@ class MathFieldEditingController extends ChangeNotifier {
     if (currentNode.children.isEmpty ||
         currentNode.courserPosition == 0 ||
         currentNode.children[posBefore].expression == '^' ||
-        currentNode.courserPosition < currentNode.children.length &&
-            currentNode.children[posBefore + 1].expression == '^') {
+        currentNode.courserPosition < currentNode.children.length && currentNode.children[posBefore + 1].expression == '^') {
       return;
     }
     if (pow.expression.endsWith('2')) {
@@ -869,8 +840,7 @@ class MathFieldEditingController extends ChangeNotifier {
     // position. This way, we can always look at the last element in the list,
     // when taking the numerator, and don't need to keep track of the index.
     final tail = currentNode.children.sublist(currentNode.courserPosition);
-    currentNode.children
-        .removeRange(currentNode.courserPosition, currentNode.children.length);
+    currentNode.children.removeRange(currentNode.courserPosition, currentNode.children.length);
     // Expressions that indicate operators.
     final operators = ['+', '-', r'\cdot', r'\div'];
     // We need to determine whether we want to append an empty fraction or
@@ -926,8 +896,7 @@ class MathFieldEditingController extends ChangeNotifier {
     // the whole number, since the digits are in fact single TeX objects.
     final numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
     if (numbers.contains(lastTeX.expression)) {
-      while (currentNode.children.isNotEmpty &&
-          numbers.contains(currentNode.children.last.expression)) {
+      while (currentNode.children.isNotEmpty && numbers.contains(currentNode.children.last.expression)) {
         lastTeX = currentNode.children.removeLast();
         frac.argNodes.first.children.insert(0, lastTeX);
       }
