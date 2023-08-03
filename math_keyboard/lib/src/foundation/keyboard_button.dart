@@ -140,6 +140,11 @@ final functionKeyboard = [
       value: r'\theta',
       asTex: true,
     ),
+    const BasicKeyboardButtonConfig(
+      label: r'\infty',
+      value: r'\infty',
+      asTex: true,
+    ),
   ],
   [
     const BasicKeyboardButtonConfig(

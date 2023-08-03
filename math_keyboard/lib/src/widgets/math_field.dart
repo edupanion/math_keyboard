@@ -144,7 +144,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
       );
   late var _controller = widget.controller ?? MathFieldEditingController();
 
-  List<String> get _variables => [...widget.variables, r'\infty'];
+  List<String> get _variables => [...widget.variables];
 
   bool get _isKeyboardShown => _overlayEntry != null && _keyboardSlideController.status != AnimationStatus.dismissed;
 
