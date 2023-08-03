@@ -150,6 +150,7 @@ final functionKeyboard = [
     const BasicKeyboardButtonConfig(
       label: r'\frac{\Box}{\Box}',
       value: r'\frac',
+      args: [TeXArg.braces, TeXArg.braces],
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
@@ -158,12 +159,12 @@ final functionKeyboard = [
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\>',
-      value: r'\>',
+      label: r'>',
+      value: r'>',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\<',
-      value: r'\<',
+      label: r'<',
+      value: r'<',
     ),
   ],
   [
