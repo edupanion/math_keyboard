@@ -170,7 +170,7 @@ final functionKeyboard = [
   [
     const BasicKeyboardButtonConfig(
       label: r'\Box^2',
-      value: r'\^2',
+      value: '^2',
       args: [TeXArg.braces],
       asTex: true,
     ),
