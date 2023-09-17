@@ -296,3 +296,55 @@ final numberKeyboard = [
     SubmitButtonConfig(),
   ],
 ];
+
+/// Text keyboard for math expression input.
+final textKeyboard = [
+  [
+    const BasicKeyboardButtonConfig(
+      label: r'ㄱ',
+      value: 'ㄱ',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'ㄴ',
+      value: 'ㄴ',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'ㄷ',
+      value: 'ㄷ',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'ㄹ',
+      value: 'ㄹ',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'ㅁ',
+      value: 'ㅁ',
+    ),
+  ],
+  [
+    _digitButtons[4],
+    _digitButtons[5],
+    _digitButtons[6],
+    const BasicKeyboardButtonConfig(
+      label: '+',
+      value: '+',
+      keyboardCharacters: ['+'],
+      highlighted: true,
+    ),
+    _subtractButton,
+  ],
+  [
+    _digitButtons[1],
+    _digitButtons[2],
+    _digitButtons[3],
+    _decimalButton,
+    DeleteButtonConfig(),
+  ],
+  [
+    const PageButtonConfig(),
+    _digitButtons[0],
+    PreviousButtonConfig(),
+    NextButtonConfig(),
+    SubmitButtonConfig(),
+  ],
+];
