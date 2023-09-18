@@ -322,9 +322,18 @@ final textKeyboard = [
     ),
   ],
   [
-    _digitButtons[4],
-    _digitButtons[5],
-    _digitButtons[6],
+    const BasicKeyboardButtonConfig(
+      label: r'ㅏ',
+      value: 'ㅏ',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'ㅑ',
+      value: 'ㅑ',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'ㅗ',
+      value: 'ㅗ',
+    ),
     const BasicKeyboardButtonConfig(
       label: '+',
       value: '+',
