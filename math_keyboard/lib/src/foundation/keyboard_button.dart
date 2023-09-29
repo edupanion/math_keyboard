@@ -224,9 +224,9 @@ final functionKeyboard = [
 /// Standard keyboard for math expression input.
 final standardKeyboard = [
   [
-    _digitButtons[7],
-    _digitButtons[8],
-    _digitButtons[9],
+    _digitButtons[1],
+    _digitButtons[2],
+    _digitButtons[3],
     const BasicKeyboardButtonConfig(
       label: '×',
       value: r'\cdot',
@@ -254,9 +254,9 @@ final standardKeyboard = [
     _subtractButton,
   ],
   [
-    _digitButtons[1],
-    _digitButtons[2],
-    _digitButtons[3],
+    _digitButtons[7],
+    _digitButtons[8],
+    _digitButtons[9],
     _decimalButton,
     DeleteButtonConfig(),
   ],
