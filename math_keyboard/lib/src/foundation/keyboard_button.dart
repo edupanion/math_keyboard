@@ -308,75 +308,75 @@ final textKeyboard = [
   [
     const BasicKeyboardButtonConfig(
       label: r'a',
-      value: 'a',
+      value: '{a}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'b',
-      value: 'b',
+      value: '{b}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'c',
-      value: 'c',
+      value: '{c}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'd',
-      value: 'd',
+      value: '{d}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'e',
-      value: 'e',
+      value: '{e}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'i',
-      value: 'i',
+      value: '{i}',
     ),
   ],
   [
     const BasicKeyboardButtonConfig(
       label: r'k',
-      value: 'k',
+      value: '{k}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'l',
-      value: 'l',
+      value: '{l}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'm',
-      value: 'm',
+      value: '{m}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'n',
-      value: 'n',
+      value: '{n}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'p',
-      value: 'p',
+      value: '{p}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'q',
-      value: 'q',
+      value: '{q}',
     ),
   ],
   [
     const BasicKeyboardButtonConfig(
       label: r'r',
-      value: 'r',
+      value: '{r}',
     ),
     const BasicKeyboardButtonConfig(
       label: r's',
-      value: 's',
+      value: '{s}',
     ),
     const BasicKeyboardButtonConfig(
       label: r't',
-      value: 't',
+      value: '{t}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'u',
-      value: 'u',
+      value: '{u}',
     ),
     const BasicKeyboardButtonConfig(
       label: r'v',
-      value: 'v',
+      value: '{v}',
     ),
     DeleteButtonConfig(),
   ],
