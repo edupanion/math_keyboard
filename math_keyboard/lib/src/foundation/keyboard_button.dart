@@ -159,8 +159,8 @@ final functionKeyboard = [
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\pm',
-      value: r'\pm',
+      label: r'\neq',
+      value: r'\neq',
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
@@ -170,6 +170,11 @@ final functionKeyboard = [
     const BasicKeyboardButtonConfig(
       label: r'<',
       value: r'<',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'\pm',
+      value: r'\pm',
+      asTex: true,
     ),
   ],
   [
@@ -200,6 +205,7 @@ final functionKeyboard = [
       value: r'\le',
       asTex: true,
     ),
+    DeleteButtonConfig(),
   ],
   [
     const PageButtonConfig(flex: 3),
@@ -301,46 +307,78 @@ final numberKeyboard = [
 final textKeyboard = [
   [
     const BasicKeyboardButtonConfig(
-      label: r'ㄱ',
-      value: 'ㄱ',
+      label: r'a',
+      value: 'a',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'ㄴ',
-      value: 'ㄴ',
+      label: r'b',
+      value: 'b',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'ㄷ',
-      value: 'ㄷ',
+      label: r'c',
+      value: 'c',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'ㄹ',
-      value: 'ㄹ',
+      label: r'd',
+      value: 'd',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'ㅁ',
-      value: 'ㅁ',
+      label: r'e',
+      value: 'e',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'i',
+      value: 'i',
     ),
   ],
   [
     const BasicKeyboardButtonConfig(
-      label: r'ㅏ',
-      value: 'ㅏ',
+      label: r'k',
+      value: 'k',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'ㅑ',
-      value: 'ㅑ',
+      label: r'l',
+      value: 'l',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'ㅗ',
-      value: 'ㅗ',
+      label: r'm',
+      value: 'm',
     ),
     const BasicKeyboardButtonConfig(
-      label: '+',
-      value: '+',
-      keyboardCharacters: ['+'],
-      highlighted: true,
+      label: r'n',
+      value: 'n',
     ),
-    _subtractButton,
+    const BasicKeyboardButtonConfig(
+      label: r'p',
+      value: 'p',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'q',
+      value: 'q',
+    ),
+  ],
+  [
+    const BasicKeyboardButtonConfig(
+      label: r'r',
+      value: 'r',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r's',
+      value: 's',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r't',
+      value: 't',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'u',
+      value: 'u',
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'v',
+      value: 'v',
+    ),
+    DeleteButtonConfig(),
   ],
   [
     _digitButtons[1],
