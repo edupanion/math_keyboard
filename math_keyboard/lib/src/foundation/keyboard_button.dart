@@ -381,15 +381,19 @@ final textKeyboard = [
     DeleteButtonConfig(),
   ],
   [
-    _digitButtons[1],
-    _digitButtons[2],
-    _digitButtons[3],
-    _decimalButton,
-    DeleteButtonConfig(),
-  ],
-  [
     const PageButtonConfig(),
-    _digitButtons[0],
+    const BasicKeyboardButtonConfig(
+      label: '(',
+      value: '(',
+      highlighted: true,
+      keyboardCharacters: ['('],
+    ),
+    const BasicKeyboardButtonConfig(
+      label: ')',
+      value: ')',
+      highlighted: true,
+      keyboardCharacters: [')'],
+    ),
     PreviousButtonConfig(),
     NextButtonConfig(),
     SubmitButtonConfig(),
