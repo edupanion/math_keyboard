@@ -210,20 +210,20 @@ final functionKeyboard = [
   [
     const PageButtonConfig(flex: 3),
     const BasicKeyboardButtonConfig(
-      label: '(',
+      label: r'(',
       value: '(',
       highlighted: true,
       keyboardCharacters: ['('],
     ),
     const BasicKeyboardButtonConfig(
-      label: ')',
+      label: r')',
       value: ')',
       highlighted: true,
       keyboardCharacters: [')'],
     ),
     PreviousButtonConfig(),
     NextButtonConfig(),
-    DeleteButtonConfig(),
+    SubmitButtonConfig(),
   ],
 ];
 
