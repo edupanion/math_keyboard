@@ -367,13 +367,13 @@ class _Buttons extends StatelessWidget {
                         else if (config is PreviousButtonConfig)
                           _NavigationButton(
                             flex: config.flex,
-                            icon: Icons.chevron_left_rounded,
+                            icon: Icons.arrow_back_ios,
                             onTap: controller.goBack,
                           )
                         else if (config is NextButtonConfig)
                           _NavigationButton(
                             flex: config.flex,
-                            icon: Icons.chevron_right_rounded,
+                            icon: Icons.arrow_forward_ios,
                             onTap: controller.goNext,
                           )
                         else if (config is SubmitButtonConfig)
