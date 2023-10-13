@@ -148,22 +148,6 @@ final functionKeyboard = [
   ],
   [
     const BasicKeyboardButtonConfig(
-      label: r'\vert',
-      value: r'\vert',
-      asTex: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'\frac{\Box}{\Box}',
-      value: r'\frac',
-      args: [TeXArg.braces, TeXArg.braces],
-      asTex: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'\neq',
-      value: r'\neq',
-      asTex: true,
-    ),
-    const BasicKeyboardButtonConfig(
       label: r'>',
       value: r'>',
     ),
@@ -172,9 +156,23 @@ final functionKeyboard = [
       value: r'<',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\sqrt{\Box}',
-      value: r'\sqrt',
-      args: [TeXArg.braces],
+      label: r'\ge',
+      value: r'\ge',
+      asTex: true,
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'\le',
+      value: r'\le',
+      asTex: true,
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'=',
+      value: r'=',
+      asTex: true,
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'\neq',
+      value: r'\neq',
       asTex: true,
     ),
   ],
@@ -192,18 +190,20 @@ final functionKeyboard = [
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'=',
-      value: r'=',
+      label: r'\frac{\Box}{\Box}',
+      value: r'\frac',
+      args: [TeXArg.braces, TeXArg.braces],
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\ge',
-      value: r'\ge',
+      label: r'\sqrt{\Box}',
+      value: r'\sqrt',
+      args: [TeXArg.braces],
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\le',
-      value: r'\le',
+      label: r'\vert',
+      value: r'\vert',
       asTex: true,
     ),
     DeleteButtonConfig(),
