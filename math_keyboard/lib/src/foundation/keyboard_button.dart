@@ -235,7 +235,7 @@ final standardKeyboard = [
     _digitButtons[3],
     const BasicKeyboardButtonConfig(
       label: '×',
-      value: r'\cdot',
+      value: r'\times',
       keyboardCharacters: ['*'],
       highlighted: true,
     ),
