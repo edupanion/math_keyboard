@@ -172,8 +172,9 @@ final functionKeyboard = [
       value: r'<',
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\pm',
-      value: r'\pm',
+      label: r'\sqrt{\Box}',
+      value: r'\sqrt',
+      args: [TeXArg.braces],
       asTex: true,
     ),
   ],
@@ -209,18 +210,6 @@ final functionKeyboard = [
   ],
   [
     const PageButtonConfig(flex: 3),
-    const BasicKeyboardButtonConfig(
-      label: r'(',
-      value: '(',
-      highlighted: true,
-      keyboardCharacters: ['('],
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r')',
-      value: ')',
-      highlighted: true,
-      keyboardCharacters: [')'],
-    ),
     PreviousButtonConfig(),
     NextButtonConfig(),
     SubmitButtonConfig(),
@@ -233,6 +222,28 @@ final standardKeyboard = [
     _digitButtons[1],
     _digitButtons[2],
     _digitButtons[3],
+    const BasicKeyboardButtonConfig(
+      label: '.',
+      value: r'.',
+      highlighted: true,
+    ),
+    const BasicKeyboardButtonConfig(
+      label: '+',
+      value: '+',
+      keyboardCharacters: ['+'],
+      highlighted: true,
+    ),
+    _subtractButton,
+  ],
+  [
+    _digitButtons[4],
+    _digitButtons[5],
+    _digitButtons[6],
+    const BasicKeyboardButtonConfig(
+      label: ',',
+      value: r',',
+      highlighted: true,
+    ),
     const BasicKeyboardButtonConfig(
       label: '×',
       value: r'\times',
@@ -248,27 +259,19 @@ final standardKeyboard = [
     ),
   ],
   [
-    _digitButtons[4],
-    _digitButtons[5],
-    _digitButtons[6],
-    const BasicKeyboardButtonConfig(
-      label: '+',
-      value: '+',
-      keyboardCharacters: ['+'],
-      highlighted: true,
-    ),
-    _subtractButton,
-  ],
-  [
     _digitButtons[7],
     _digitButtons[8],
     _digitButtons[9],
-    _decimalButton,
+    _digitButtons[0],
+    const BasicKeyboardButtonConfig(
+      label: r'\pm',
+      value: r'\pm',
+      asTex: true,
+    ),
     DeleteButtonConfig(),
   ],
   [
     const PageButtonConfig(),
-    _digitButtons[0],
     PreviousButtonConfig(),
     NextButtonConfig(),
     SubmitButtonConfig(),
@@ -309,74 +312,91 @@ final textKeyboard = [
     const BasicKeyboardButtonConfig(
       label: r'a',
       value: '{a}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'b',
       value: '{b}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'c',
       value: '{c}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'd',
       value: '{d}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'e',
       value: '{e}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'i',
       value: '{i}',
+      asTex: true,
     ),
   ],
   [
     const BasicKeyboardButtonConfig(
       label: r'k',
       value: '{k}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'l',
       value: '{l}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'm',
       value: '{m}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'n',
       value: '{n}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'p',
       value: '{p}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'q',
       value: '{q}',
+      asTex: true,
     ),
   ],
   [
     const BasicKeyboardButtonConfig(
       label: r'r',
       value: '{r}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r's',
       value: '{s}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r't',
       value: '{t}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'u',
       value: '{u}',
+      asTex: true,
     ),
     const BasicKeyboardButtonConfig(
       label: r'v',
       value: '{v}',
+      asTex: true,
     ),
     DeleteButtonConfig(),
   ],
