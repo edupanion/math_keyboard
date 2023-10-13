@@ -267,6 +267,7 @@ final standardKeyboard = [
       label: r'\pm',
       value: r'\pm',
       asTex: true,
+      highlighted: true,
     ),
     DeleteButtonConfig(),
   ],
@@ -335,12 +336,17 @@ final textKeyboard = [
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'i',
-      value: '{i}',
+      label: r'h',
+      value: '{h}',
       asTex: true,
     ),
   ],
   [
+    const BasicKeyboardButtonConfig(
+      label: r'i',
+      value: '{i}',
+      asTex: true,
+    ),
     const BasicKeyboardButtonConfig(
       label: r'k',
       value: '{k}',
@@ -402,18 +408,6 @@ final textKeyboard = [
   ],
   [
     const PageButtonConfig(),
-    const BasicKeyboardButtonConfig(
-      label: '(',
-      value: '(',
-      highlighted: true,
-      keyboardCharacters: ['('],
-    ),
-    const BasicKeyboardButtonConfig(
-      label: ')',
-      value: ')',
-      highlighted: true,
-      keyboardCharacters: [')'],
-    ),
     PreviousButtonConfig(),
     NextButtonConfig(),
     SubmitButtonConfig(),
