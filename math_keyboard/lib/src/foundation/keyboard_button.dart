@@ -254,7 +254,6 @@ final standardKeyboard = [
       label: '÷',
       value: r'\div',
       keyboardCharacters: ['/'],
-      args: [TeXArg.braces, TeXArg.braces],
       highlighted: true,
     ),
   ],
