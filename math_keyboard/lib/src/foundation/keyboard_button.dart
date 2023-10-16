@@ -252,7 +252,7 @@ final standardKeyboard = [
     ),
     const BasicKeyboardButtonConfig(
       label: '÷',
-      value: r'\frac',
+      value: r'\div',
       keyboardCharacters: ['/'],
       args: [TeXArg.braces, TeXArg.braces],
       highlighted: true,
