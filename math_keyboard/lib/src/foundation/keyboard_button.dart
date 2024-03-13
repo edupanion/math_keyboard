@@ -294,120 +294,23 @@ final numberKeyboard = [
   ],
 ];
 
+final _textKeyboardKeys = [
+  ['a', 'd', 'g', 'j', 'm', 'p', 's', 'v', 'y'],
+  ['b', 'e', 'h', 'k', 'n', 'q', 't', 'w', 'z'],
+  ['c', 'f', 'i', 'l', 'o', 'r', 'u', 'x']
+];
+
 /// Text keyboard for math expression input.
 final textKeyboard = [
-  [
-    const BasicKeyboardButtonConfig(
-      label: r'a',
-      value: '{a}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'b',
-      value: '{b}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'c',
-      value: '{c}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'd',
-      value: '{d}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'e',
-      value: '{e}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'h',
-      value: '{h}',
-      asTex: true,
-      highlighted: true,
-    ),
-  ],
-  [
-    const BasicKeyboardButtonConfig(
-      label: r'i',
-      value: '{i}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'k',
-      value: '{k}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'l',
-      value: '{l}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'm',
-      value: '{m}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'n',
-      value: '{n}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'p',
-      value: '{p}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'q',
-      value: '{q}',
-      asTex: true,
-      highlighted: true,
-    ),
-  ],
-  [
-    const BasicKeyboardButtonConfig(
-      label: r'r',
-      value: '{r}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r's',
-      value: '{s}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r't',
-      value: '{t}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'u',
-      value: '{u}',
-      asTex: true,
-      highlighted: true,
-    ),
-    const BasicKeyboardButtonConfig(
-      label: r'v',
-      value: '{v}',
-      asTex: true,
-      highlighted: true,
-    ),
-  ],
+  for (final row in _textKeyboardKeys)
+    [
+      for (final key in row)
+        BasicKeyboardButtonConfig(
+          label: key,
+          value: '{$key}',
+          asTex: false,
+          highlighted: true,
+          keyboardCharacters: [key],
+        ),
+    ],
 ];
