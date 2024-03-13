@@ -37,8 +37,7 @@ class KeyboardButton extends StatefulWidget {
   _KeyboardButtonState createState() => _KeyboardButtonState();
 }
 
-class _KeyboardButtonState extends State<KeyboardButton>
-    with SingleTickerProviderStateMixin {
+class _KeyboardButtonState extends State<KeyboardButton> with SingleTickerProviderStateMixin {
   late final _animationController = AnimationController(
     duration: const Duration(milliseconds: 50),
     reverseDuration: const Duration(milliseconds: 200),
@@ -83,7 +82,7 @@ class _KeyboardButtonState extends State<KeyboardButton>
         onTapDown: _handleTapDown,
         onTapCancel: _handleTapCancel,
         child: Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(2),
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -94,10 +93,9 @@ class _KeyboardButtonState extends State<KeyboardButton>
               builder: (context, child) {
                 return DecoratedBox(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                     color: Colors.white.withOpacity(
-                      Curves.easeInOut.transform(_animationController.value) /
-                          3,
+                      Curves.easeInOut.transform(_animationController.value) / 3,
                     ),
                   ),
                   child: Center(
@@ -110,6 +108,7 @@ class _KeyboardButtonState extends State<KeyboardButton>
           ),
         ),
       ),
+
       /// TapDown이 된 상태에서 ListView 스크롤이 발생하면 문제가 발생하여 아래 RawGestureDetector를 GestureDetector로 변경함.
       // RawGestureDetector(
       //  behavior: HitTestBehavior.opaque,

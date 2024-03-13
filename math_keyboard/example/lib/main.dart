@@ -46,13 +46,14 @@ class DemoPage extends StatefulWidget {
 }
 
 class _DemoPageState extends State<DemoPage> {
+  final FocusNode _focusNode = FocusNode();
   var _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     Widget child;
     if (_currentIndex == 0) {
-      child = const _MathFieldTextFieldExample();
+      child = _MathFieldTextFieldExample(focusNode: _focusNode);
     } else if (_currentIndex == 1) {
       child = const Center(
         child: Padding(
@@ -68,42 +69,49 @@ class _DemoPageState extends State<DemoPage> {
       child = const _ClearableAutofocusExample();
     }
 
-    return MathKeyboardViewInsets(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Math keyboard demo'),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: child,
-            ),
-            // We insert the bottom navigation bar here instead of the
-            // bottomNavigationBar parameter in order to make it stick on
-            // top of the keyboard.
-            BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  label: 'Fields',
-                  icon: Icon(Icons.text_fields_outlined),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Empty',
-                  icon: Icon(Icons.hourglass_empty_outlined),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Autofocus',
-                  icon: Icon(Icons.auto_awesome),
-                ),
-              ],
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        if (_focusNode.hasFocus) {
+          _focusNode.unfocus();
+        }
+      },
+      child: MathKeyboardViewInsets(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Math keyboard demo'),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: child,
+              ),
+              // We insert the bottom navigation bar here instead of the
+              // bottomNavigationBar parameter in order to make it stick on
+              // top of the keyboard.
+              BottomNavigationBar(
+                currentIndex: _currentIndex,
+                onTap: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                items: const [
+                  BottomNavigationBarItem(
+                    label: 'Fields',
+                    icon: Icon(Icons.text_fields_outlined),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Empty',
+                    icon: Icon(Icons.hourglass_empty_outlined),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Autofocus',
+                    icon: Icon(Icons.auto_awesome),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -114,7 +122,12 @@ class _DemoPageState extends State<DemoPage> {
 /// field for comparison.
 class _MathFieldTextFieldExample extends StatelessWidget {
   /// Constructs a [_MathFieldTextFieldExample] widget.
-  const _MathFieldTextFieldExample({Key? key}) : super(key: key);
+  const _MathFieldTextFieldExample({
+    Key? key,
+    this.focusNode,
+  }) : super(key: key);
+
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +142,7 @@ class _MathFieldTextFieldExample extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: MathField(
               variables: const ['α'],
+              focusNode: focusNode,
               onChanged: (value) {
                 String expression;
                 try {

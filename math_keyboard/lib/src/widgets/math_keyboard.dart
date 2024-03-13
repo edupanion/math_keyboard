@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:math_keyboard/src/custom_key_icons/custom_key_icons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:math_keyboard/src/foundation/keyboard_button.dart';
 import 'package:math_keyboard/src/widgets/decimal_separator.dart';
 import 'package:math_keyboard/src/widgets/keyboard_button.dart';
@@ -79,6 +82,9 @@ class MathKeyboard extends StatelessWidget {
       curve: Curves.ease,
     );
 
+    final _scrollController = ScrollController();
+    final keys = <GlobalKey>[GlobalKey(), GlobalKey(), GlobalKey()];
+
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(0, 1),
@@ -93,38 +99,31 @@ class MathKeyboard extends StatelessWidget {
             child: Material(
               type: MaterialType.transparency,
               child: ColoredBox(
-                color: Colors.black,
+                color: Color(0xFFD8DBE3),
                 child: SafeArea(
                   top: false,
                   child: _KeyboardBody(
                     insetsState: insetsState,
-                    slideAnimation:
-                        slideAnimation == null ? null : curvedSlideAnimation,
+                    slideAnimation: slideAnimation == null ? null : curvedSlideAnimation,
                     child: Padding(
                       padding: padding,
                       child: Center(
                         child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 5e2,
-                          ),
+                          constraints: const BoxConstraints(),
                           child: Column(
                             children: [
-                              if (type != MathKeyboardType.numberOnly)
-                                _Variables(
-                                  controller: controller,
-                                  variables: variables,
-                                ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 4,
-                                ),
-                                child: _Buttons(
-                                  controller: controller,
-                                  page1: standardKeyboard,
-                                  page2: functionKeyboard,
-                                  page3: textKeyboard,
-                                  onSubmit: onSubmit,
-                                ),
+                              _Categories(
+                                controller: controller,
+                                variables: variables,
+                                scrollController: _scrollController,
+                                keys: keys,
+                              ),
+                              _Buttons(
+                                keys: keys,
+                                scrollController: _scrollController,
+                                controller: controller,
+                                pages: [standardKeyboard, functionKeyboard, textKeyboard],
+                                onSubmit: onSubmit,
                               ),
                             ],
                           ),
@@ -213,8 +212,7 @@ class _KeyboardBodyState extends State<_KeyboardBody> {
       if (!mounted) return;
 
       final renderBox = context.findRenderObject() as RenderBox;
-      insetsState[ObjectKey(this)] =
-          renderBox.size.height * (widget.slideAnimation?.value ?? 1);
+      insetsState[ObjectKey(this)] = renderBox.size.height * (widget.slideAnimation?.value ?? 1);
     });
   }
 
@@ -226,12 +224,14 @@ class _KeyboardBodyState extends State<_KeyboardBody> {
 }
 
 /// Widget showing the variables a user can use.
-class _Variables extends StatelessWidget {
-  /// Constructs a [_Variables] Widget.
-  const _Variables({
+class _Categories extends StatefulWidget {
+  /// Constructs a [_Categories] Widget.
+  const _Categories({
     Key? key,
     required this.controller,
     required this.variables,
+    required this.keys,
+    this.scrollController,
   }) : super(key: key);
 
   /// The editing controller for the math field that the variables are connected
@@ -241,35 +241,96 @@ class _Variables extends StatelessWidget {
   /// The variables to show.
   final List<String> variables;
 
+  final List<GlobalKey> keys;
+
+  final ScrollController? scrollController;
+
+  @override
+  State<_Categories> createState() => _CategoriesState();
+}
+
+class _CategoriesState extends State<_Categories> {
+  final categories = [
+    'packages/math_keyboard/lib/assets/number.svg',
+    'packages/math_keyboard/lib/assets/operator.svg',
+    'packages/math_keyboard/lib/assets/frac.svg',
+  ];
+
+  int _selected = 0;
+  Completer<void>? _moved;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.scrollController?.addListener(_handleScroll);
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController?.removeListener(_handleScroll);
+    super.dispose();
+  }
+
+  void _handleScroll() async {
+    if (_moved?.isCompleted == false) return;
+
+    for (var i = 0; i < widget.keys.length; i++) {
+      final key = widget.keys[i];
+      final renderBox = key.currentContext!.findRenderObject() as RenderBox;
+      final size = renderBox.size;
+      final position = renderBox.localToGlobal(Offset.zero);
+      final dx = position.dx;
+      final dxEnd = dx + size.width;
+
+      if (dx <= 8 && dxEnd >= 0) {
+        if (_selected != i) {
+          setState(() {
+            _selected = i;
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 54,
-      color: Colors.grey[900],
+      width: double.infinity,
+      color: Color(0xFFD8DBE3),
       child: AnimatedBuilder(
-        animation: controller,
+        animation: widget.controller,
         builder: (context, child) {
-          return ListView.separated(
-            itemCount: variables.length,
+          return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            separatorBuilder: (context, index) {
-              return Center(
-                child: Container(
-                  height: 24,
-                  width: 1,
-                  color: Colors.white,
-                ),
-              );
-            },
-            itemBuilder: (context, index) {
-              return SizedBox(
-                width: 56,
-                child: _VariableButton(
-                  name: variables[index],
-                  onTap: () => controller.addLeaf('{${variables[index]}}'),
-                ),
-              );
-            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                for (int i = 0; i < categories.length; i++)
+                  _CategoryButton(
+                    name: categories[i],
+                    selected: _selected == i,
+                    onTap: () async {
+                      if (_moved?.isCompleted == false) return;
+
+                      setState(() {
+                        _selected = i;
+                      });
+
+                      _moved = Completer();
+
+                      await Scrollable.ensureVisible(
+                        widget.keys[i].currentContext!,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+
+                      _moved?.complete();
+                    },
+                  ),
+              ],
+            ),
           );
         },
       ),
@@ -283,10 +344,13 @@ class _Buttons extends StatelessWidget {
   const _Buttons({
     Key? key,
     required this.controller,
+    required this.keys,
     this.page1,
     this.page2,
     this.page3,
+    required this.pages,
     this.onSubmit,
+    this.scrollController,
   }) : super(key: key);
 
   /// The editing controller for the math field that the variables are connected
@@ -302,94 +366,101 @@ class _Buttons extends StatelessWidget {
   /// The buttons to display.
   final List<List<KeyboardButtonConfig>>? page3;
 
+  final List<List<List<KeyboardButtonConfig>>> pages;
+
   /// Function that is called when the enter / submit button is tapped.
   ///
   /// Can be `null`.
   final VoidCallback? onSubmit;
 
+  final ScrollController? scrollController;
+
+  final List<GlobalKey> keys;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 230,
-      child: AnimatedBuilder(
-        animation: controller,
-        builder: (context, child) {
-          final pages = [
-            if (page1 != null) page1!,
-            if (page2 != null) page2!,
-            if (page3 != null) page3!,
-          ];
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        // final pages = [
+        //   if (page1 != null) page1!,
+        //   if (page2 != null) page2!,
+        //   if (page3 != null) page3!,
+        // ];
 
-          final configIcons = [
-            if (page1 != null) CustomKeyIcons.key_symbols,
-            if (page2 != null) null,
-            if (page3 != null) null,
-          ];
-
-          final layout = pages[controller.page];
-
-          return Column(
-            children: [
-              for (final row in layout)
-                SizedBox(
-                  height: 56,
-                  child: Row(
-                    children: [
-                      for (final config in row)
-                        if (config is BasicKeyboardButtonConfig)
-                          _BasicButton(
-                            flex: config.flex,
-                            label: config.label,
-                            onTap: config.args != null
-                                ? () => controller.addFunction(
-                                      config.value,
-                                      config.args!,
-                                    )
-                                : () => controller.addLeaf(config.value),
-                            asTex: config.asTex,
-                            highlightLevel: config.highlighted ? 1 : 0,
-                          )
-                        else if (config is DeleteButtonConfig)
-                          _NavigationButton(
-                            flex: config.flex,
-                            icon: Icons.backspace,
-                            iconSize: 22,
-                            onTap: () => controller.goBack(deleteMode: true),
-                          )
-                        else if (config is PageButtonConfig)
-                          _BasicButton(
-                            flex: config.flex,
-                            icon: configIcons[controller.page],
-                            label: [null, 'abc', '123'][controller.page],
-                            onTap: controller.nextPage,
-                            highlightLevel: 1,
-                          )
-                        else if (config is PreviousButtonConfig)
-                          _NavigationButton(
-                            flex: config.flex,
-                            icon: Icons.arrow_back,
-                            onTap: controller.goBack,
-                          )
-                        else if (config is NextButtonConfig)
-                          _NavigationButton(
-                            flex: config.flex,
-                            icon: Icons.arrow_forward,
-                            onTap: controller.goNext,
-                          )
-                        else if (config is SubmitButtonConfig)
-                          _BasicButton(
-                            flex: config.flex,
-                            icon: Icons.keyboard_return,
-                            onTap: onSubmit,
-                            highlightLevel: 2,
+        return Column(
+          children: [
+            SingleChildScrollView(
+              controller: scrollController,
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (int i = 0; i < pages.length; i++)
+                    Column(
+                      key: keys[i],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final row in pages[i])
+                          Row(
+                            children: [
+                              for (final config in row)
+                                if (config is BasicKeyboardButtonConfig)
+                                  _BasicButton(
+                                    flex: config.flex,
+                                    label: config.label,
+                                    onTap: config.args != null
+                                        ? () => controller.addFunction(
+                                              config.value,
+                                              config.args!,
+                                            )
+                                        : () => controller.addLeaf(config.value),
+                                    asTex: config.asTex,
+                                    highlightLevel: config.highlighted ? 1 : 0,
+                                  )
+                            ],
                           ),
-                    ],
+                      ],
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 56,
+              child: Row(
+                children: [
+                  _NavigationButton(
+                    flex: 2,
+                    icon: Icons.backspace_outlined,
+                    iconSize: 22,
+                    onTap: () => controller.goBack(deleteMode: true),
                   ),
-                ),
-            ],
-          );
-        },
-      ),
+                  _NavigationButton(
+                    flex: 2,
+                    icon: Icons.arrow_back,
+                    iconSize: 22,
+                    onTap: controller.goBack,
+                  ),
+                  _NavigationButton(
+                    flex: 2,
+                    icon: Icons.arrow_forward,
+                    iconSize: 22,
+                    onTap: controller.goNext,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: _BasicButton(
+                      flex: 2,
+                      icon: Icons.keyboard_return,
+                      onTap: onSubmit,
+                      highlightLevel: 2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -432,14 +503,14 @@ class _BasicButton extends StatelessWidget {
     if (label == null) {
       result = Icon(
         icon,
-        color: Colors.white,
+        color: Color(0xFF3B3E43),
       );
     } else if (asTex) {
       result = Math.tex(
         label!,
         options: MathOptions(
           fontSize: 22,
-          color: Colors.white,
+          color: Color(0xFF3B3E43),
         ),
       );
     } else {
@@ -454,7 +525,7 @@ class _BasicButton extends StatelessWidget {
         symbol!,
         style: const TextStyle(
           fontSize: 22,
-          color: Colors.white,
+          color: Color(0xFF3B3E43),
         ),
       );
     }
@@ -462,15 +533,16 @@ class _BasicButton extends StatelessWidget {
     result = KeyboardButton(
       onTap: onTap,
       color: highlightLevel > 1
-          ? Theme.of(context).colorScheme.secondary
+          ? Color(0xFFFFD54C)
           : highlightLevel == 1
-              ? Colors.grey[900]
-              : null,
+              ? Color(0xFFF4F6FA)
+              : Colors.white,
       child: result,
     );
 
-    return Expanded(
-      flex: flex ?? 2,
+    return SizedBox(
+      height: 56,
+      width: 64,
       child: result,
     );
   }
@@ -506,10 +578,10 @@ class _NavigationButton extends StatelessWidget {
       child: KeyboardButton(
         onTap: onTap,
         onHold: onTap,
-        color: Colors.grey[900],
+        color: Colors.grey[100]!,
         child: Icon(
           icon,
-          color: Colors.white,
+          color: Colors.black,
           size: iconSize,
         ),
       ),
@@ -518,29 +590,55 @@ class _NavigationButton extends StatelessWidget {
 }
 
 /// Widget for variable keyboard buttons.
-class _VariableButton extends StatelessWidget {
-  /// Constructs a [_VariableButton] widget.
-  const _VariableButton({
+class _CategoryButton extends StatefulWidget {
+  /// Constructs a [_CategoryButton] widget.
+  const _CategoryButton({
     Key? key,
     required this.name,
+    required this.selected,
     this.onTap,
   }) : super(key: key);
 
   /// The variable name.
   final String name;
 
+  /// Whether the button is pressed.
+  final bool selected;
+
   /// Called when the button is tapped.
   final VoidCallback? onTap;
 
   @override
+  State<_CategoryButton> createState() => _CategoryButtonState();
+}
+
+class _CategoryButtonState extends State<_CategoryButton> {
+  var _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return KeyboardButton(
-      onTap: onTap,
-      child: Math.tex(
-        name,
-        options: MathOptions(
-          fontSize: 22,
-          color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        widget.onTap?.call();
+      },
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      child: AnimatedContainer(
+        height: 40,
+        duration: const Duration(milliseconds: 200),
+        margin: const EdgeInsets.only(left: 8),
+        constraints: const BoxConstraints(minWidth: 44),
+        decoration: BoxDecoration(
+          color: widget.selected || _pressed ? Color(0xFFF4F6FA) : Color(0xFFE5E8F0),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SvgPicture.asset(widget.name),
+          ),
         ),
       ),
     );
