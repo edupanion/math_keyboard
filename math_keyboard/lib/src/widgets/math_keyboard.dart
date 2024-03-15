@@ -83,7 +83,8 @@ class MathKeyboard extends StatelessWidget {
     );
 
     final _scrollController = ScrollController();
-    final keys = <GlobalKey>[GlobalKey(), GlobalKey(), GlobalKey()];
+
+    final keyboardPages = [...keyboardMap];
 
     return SlideTransition(
       position: Tween<Offset>(
@@ -116,13 +117,12 @@ class MathKeyboard extends StatelessWidget {
                                 controller: controller,
                                 variables: variables,
                                 scrollController: _scrollController,
-                                keys: keys,
+                                pages: keyboardPages,
                               ),
                               _Buttons(
-                                keys: keys,
                                 scrollController: _scrollController,
                                 controller: controller,
-                                pages: [standardKeyboard, functionKeyboard, textKeyboard],
+                                pages: keyboardPages,
                                 onSubmit: onSubmit,
                               ),
                             ],
@@ -230,7 +230,7 @@ class _Categories extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.variables,
-    required this.keys,
+    required this.pages,
     this.scrollController,
   }) : super(key: key);
 
@@ -241,7 +241,7 @@ class _Categories extends StatefulWidget {
   /// The variables to show.
   final List<String> variables;
 
-  final List<GlobalKey> keys;
+  final List<KeyboardPageConfig> pages;
 
   final ScrollController? scrollController;
 
@@ -250,12 +250,6 @@ class _Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<_Categories> {
-  final categories = [
-    'packages/math_keyboard/lib/assets/number.svg',
-    'packages/math_keyboard/lib/assets/operator.svg',
-    'packages/math_keyboard/lib/assets/frac.svg',
-  ];
-
   int _selected = 0;
   Completer<void>? _moved;
 
@@ -275,9 +269,9 @@ class _CategoriesState extends State<_Categories> {
   void _handleScroll() async {
     if (_moved?.isCompleted == false) return;
 
-    for (var i = 0; i < widget.keys.length; i++) {
-      final key = widget.keys[i];
-      final renderBox = key.currentContext!.findRenderObject() as RenderBox;
+    for (var i = 0; i < widget.pages.length; i++) {
+      final key = widget.pages[i].key;
+      final renderBox = key.currentContext?.findRenderObject() as RenderBox;
       final size = renderBox.size;
       final position = renderBox.localToGlobal(Offset.zero);
       final dx = position.dx;
@@ -307,9 +301,9 @@ class _CategoriesState extends State<_Categories> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                for (int i = 0; i < categories.length; i++)
+                for (int i = 0; i < widget.pages.length; i++)
                   _CategoryButton(
-                    name: categories[i],
+                    name: widget.pages[i].icon,
                     selected: _selected == i,
                     onTap: () async {
                       if (_moved?.isCompleted == false) return;
@@ -321,7 +315,7 @@ class _CategoriesState extends State<_Categories> {
                       _moved = Completer();
 
                       await Scrollable.ensureVisible(
-                        widget.keys[i].currentContext!,
+                        widget.pages[i].key.currentContext!,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       );
@@ -344,10 +338,6 @@ class _Buttons extends StatelessWidget {
   const _Buttons({
     Key? key,
     required this.controller,
-    required this.keys,
-    this.page1,
-    this.page2,
-    this.page3,
     required this.pages,
     this.onSubmit,
     this.scrollController,
@@ -357,16 +347,7 @@ class _Buttons extends StatelessWidget {
   /// to.
   final MathFieldEditingController controller;
 
-  /// The buttons to display.
-  final List<List<KeyboardButtonConfig>>? page1;
-
-  /// The buttons to display.
-  final List<List<KeyboardButtonConfig>>? page2;
-
-  /// The buttons to display.
-  final List<List<KeyboardButtonConfig>>? page3;
-
-  final List<List<List<KeyboardButtonConfig>>> pages;
+  final List<KeyboardPageConfig> pages;
 
   /// Function that is called when the enter / submit button is tapped.
   ///
@@ -375,19 +356,11 @@ class _Buttons extends StatelessWidget {
 
   final ScrollController? scrollController;
 
-  final List<GlobalKey> keys;
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
-        // final pages = [
-        //   if (page1 != null) page1!,
-        //   if (page2 != null) page2!,
-        //   if (page3 != null) page3!,
-        // ];
-
         return Column(
           children: [
             SingleChildScrollView(
@@ -396,30 +369,34 @@ class _Buttons extends StatelessWidget {
               child: Row(
                 children: [
                   for (int i = 0; i < pages.length; i++)
-                    Column(
-                      key: keys[i],
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (final row in pages[i])
-                          Row(
-                            children: [
-                              for (final config in row)
-                                if (config is BasicKeyboardButtonConfig)
-                                  _BasicButton(
-                                    flex: config.flex,
-                                    label: config.label,
-                                    onTap: config.args != null
-                                        ? () => controller.addFunction(
-                                              config.value,
-                                              config.args!,
-                                            )
-                                        : () => controller.addLeaf(config.value),
-                                    asTex: config.asTex,
-                                    highlightLevel: config.highlighted ? 1 : 0,
-                                  )
-                            ],
-                          ),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(left: i == 0 ? 0 : 2.0, right: i == pages.length - 1 ? 0 : 2.0),
+                      child: Column(
+                        key: pages[i].key,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final row in pages[i].keyboard)
+                            Row(
+                              children: [
+                                for (final config in row)
+                                  if (config is BasicKeyboardButtonConfig)
+                                    _BasicButton(
+                                      flex: config.flex,
+                                      label: config.label,
+                                      onTap: config.args != null
+                                          ? () => controller.addFunction(
+                                                config.value,
+                                                config.args!,
+                                                config.suffixArgs,
+                                              )
+                                          : () => controller.addLeaf(config.value),
+                                      asTex: config.asTex,
+                                      highlightLevel: i.isOdd ? 1 : 0,
+                                    )
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                 ],
               ),

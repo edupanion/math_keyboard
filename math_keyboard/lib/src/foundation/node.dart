@@ -118,17 +118,28 @@ class TeXFunction extends TeX {
   /// case, the [TeXNode.parent] is set in the constructor body. If [argNodes]
   /// is passed empty (default), empty [TeXNode]s will be inserted for each
   /// arg.
-  TeXFunction(String expression, this.parent, this.args,
-      [List<TeXNode>? argNodes])
+  TeXFunction(String expression, this.parent, this.args, [List<TeXNode>? argNodes, this.suffixArgs])
       : assert(args.isNotEmpty, 'A function needs at least one argument.'),
         assert(argNodes == null || argNodes.length == args.length),
         argNodes = argNodes ?? List.empty(growable: true),
         super(expression) {
     if (this.argNodes.isEmpty) {
+      if (suffixArgs != null) {
+        for (var i = 0; i < suffixArgs!.length; i++) {
+          this.argNodes.add(TeXNode(this));
+        }
+      }
+
       for (var i = 0; i < args.length; i++) {
         this.argNodes.add(TeXNode(this));
       }
     } else {
+      if (suffixArgs != null) {
+        for (var i = 0; i < suffixArgs!.length; i++) {
+          this.argNodes.add(TeXNode(this));
+        }
+      }
+
       for (final node in this.argNodes) {
         node.parent = this;
       }
@@ -140,6 +151,9 @@ class TeXFunction extends TeX {
 
   /// The delimiters of the arguments.
   final List<TeXArg> args;
+
+  /// The delimiters of the suffix arguments.
+  final List<TeXArg>? suffixArgs;
 
   /// The arguments to this function.
   final List<TeXNode> argNodes;
@@ -170,12 +184,27 @@ class TeXFunction extends TeX {
 
   @override
   String buildString({Color? cursorColor}) {
-    final buffer = StringBuffer(expression);
-    for (var i = 0; i < args.length; i++) {
+    final buffer = StringBuffer();
+
+    var i = 0;
+
+    if (suffixArgs != null) {
+      for (; i < suffixArgs!.length; i++) {
+        buffer.write(openingChar(suffixArgs![i]));
+        buffer.write(argNodes[i].buildTeXString(cursorColor: cursorColor));
+        buffer.write(closingChar(suffixArgs![i]));
+      }
+      buffer.write(expression);
+    } else {
+      buffer.write(expression);
+    }
+
+    for (; i < args.length; i++) {
       buffer.write(openingChar(args[i]));
       buffer.write(argNodes[i].buildTeXString(cursorColor: cursorColor));
       buffer.write(closingChar(args[i]));
     }
+
     return buffer.toString();
   }
 }
@@ -213,8 +242,7 @@ class Cursor extends TeX {
     if (cursorColor == null) {
       throw FlutterError('Cursor.buildString() called without a cursorColor.');
     }
-    final colorString =
-        '#${(cursorColor.value & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
+    final colorString = '#${(cursorColor.value & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
     return '\\textcolor{$colorString}{\\cursor}';
   }
 }

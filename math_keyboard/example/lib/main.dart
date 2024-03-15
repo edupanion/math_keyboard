@@ -156,10 +156,37 @@ class _MathFieldTextFieldExample extends StatelessWidget {
               },
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: MathField(
-              keyboardType: MathKeyboardType.numberOnly,
+          ColoredBox(
+            color: Colors.grey.shade200,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'The math field on this tab should automatically receive focus. ',
+                  style: TextStyle(
+                    // leadingDistribution: TextLeadingDistribution.even,
+                    fontSize: 20,
+                    height: 5,
+                    decorationStyle: TextDecorationStyle.dashed,
+                  ),
+                ),
+                const Text(
+                  '한글',
+                  style: TextStyle(
+                    // leadingDistribution: TextLeadingDistribution.even,
+                    fontSize: 20,
+                    height: 5,
+                  ),
+                ),
+                const Text(
+                  '123',
+                  style: TextStyle(
+                    // leadingDistribution: TextLeadingDistribution.even,
+                    fontSize: 20,
+                    height: 5,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
