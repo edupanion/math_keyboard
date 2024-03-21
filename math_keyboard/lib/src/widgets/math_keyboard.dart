@@ -260,12 +260,17 @@ class _Categories extends StatefulWidget {
 class _CategoriesState extends State<_Categories> {
   int _selected = 0;
   Completer<void>? _moved;
+  final List<GlobalKey> _keys = [];
 
   @override
   void initState() {
     super.initState();
 
     widget.scrollController?.addListener(_handleScroll);
+
+    for (var i = 0; i < widget.pages.length; i++) {
+      _keys.add(GlobalKey());
+    }
   }
 
   @override
@@ -290,6 +295,12 @@ class _CategoriesState extends State<_Categories> {
           setState(() {
             _selected = i;
           });
+
+          await Scrollable.ensureVisible(
+            _keys[i].currentContext!,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
         }
       }
     }
@@ -297,8 +308,6 @@ class _CategoriesState extends State<_Categories> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.recommendKeyboardTypes);
-
     return Container(
       height: 54,
       width: double.infinity,
@@ -306,68 +315,91 @@ class _CategoriesState extends State<_Categories> {
       child: AnimatedBuilder(
         animation: widget.controller,
         builder: (context, child) {
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ...widget.recommendKeyboardTypes.map((type) {
-                  final keyboard = widget.pages.firstWhere((page) => page.type == type);
+          return Row(
+            children: [
+              ...widget.recommendKeyboardTypes.map((type) {
+                final keyboard = widget.pages.firstWhere((page) => page.type == type);
 
-                  return _CategoryButton(
-                    name: keyboard.icon,
-                    isRecommended: true,
-                    selected: _selected == widget.pages.indexOf(keyboard),
-                    onTap: () async {
-                      if (_moved?.isCompleted == false) return;
+                return _CategoryButton(
+                  name: keyboard.icon,
+                  isRecommended: true,
+                  selected: _selected == widget.pages.indexOf(keyboard),
+                  onTap: () async {
+                    if (_moved?.isCompleted == false) return;
 
-                      setState(() {
-                        _selected = widget.pages.indexOf(keyboard);
-                      });
+                    setState(() {
+                      _selected = widget.pages.indexOf(keyboard);
+                    });
 
-                      _moved = Completer();
+                    _moved = Completer();
 
-                      await Scrollable.ensureVisible(
+                    final keyIndex = widget.pages.indexOf(keyboard);
+
+                    await Future.wait([
+                      Scrollable.ensureVisible(
                         keyboard.key.currentContext!,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
-                      );
-
-                      _moved?.complete();
-                    },
-                  );
-                }),
-                if (widget.recommendKeyboardTypes.isNotEmpty)
-                  Container(
-                    width: 1,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    color: Colors.white,
-                  ),
-                for (int i = 0; i < widget.pages.length; i++)
-                  _CategoryButton(
-                    name: widget.pages[i].icon,
-                    selected: _selected == i,
-                    onTap: () async {
-                      if (_moved?.isCompleted == false) return;
-
-                      setState(() {
-                        _selected = i;
-                      });
-
-                      _moved = Completer();
-
-                      await Scrollable.ensureVisible(
-                        widget.pages[i].key.currentContext!,
+                      ),
+                      Scrollable.ensureVisible(
+                        _keys[keyIndex].currentContext!,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
-                      );
+                      ),
+                    ]);
 
-                      _moved?.complete();
-                    },
+                    _moved?.complete();
+                  },
+                );
+              }),
+              if (widget.recommendKeyboardTypes.isNotEmpty)
+                Container(
+                  width: 1,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  color: Colors.white,
+                ),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      for (int i = 0; i < widget.pages.length; i++)
+                        _CategoryButton(
+                          key: _keys[i],
+                          name: widget.pages[i].icon,
+                          selected: _selected == i,
+                          onTap: () async {
+                            if (_moved?.isCompleted == false) return;
+
+                            setState(() {
+                              _selected = i;
+                            });
+
+                            _moved = Completer();
+
+                            await Future.wait([
+                              Scrollable.ensureVisible(
+                                widget.pages[i].key.currentContext!,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              ),
+                              Scrollable.ensureVisible(
+                                _keys[i].currentContext!,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              ),
+                            ]);
+
+                            _moved?.complete();
+                          },
+                        ),
+                    ],
                   ),
-              ],
-            ),
+                ),
+              ),
+            ],
           );
         },
       ),

@@ -144,8 +144,7 @@ class _MathFieldTextFieldExample extends StatelessWidget {
               variables: const ['α'],
               focusNode: focusNode,
               recommendKeyboardTypes: [
-                KeyboardType.number,
-                KeyboardType.lowerCaseText,
+                KeyboardType.upperCaseText,
               ],
               onChanged: (value) {
                 String expression;
