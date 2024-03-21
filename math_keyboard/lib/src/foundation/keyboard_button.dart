@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:math_keyboard/math_keyboard.dart';
 import 'package:math_keyboard/src/foundation/node.dart';
 
 part './keyboards/greek_letters_keyboard.dart';
@@ -127,9 +128,13 @@ const _subtractButton = BasicKeyboardButtonConfig(
 class KeyboardPageConfig {
   /// Constructs a [KeyboardPageConfig].
   KeyboardPageConfig({
+    required this.type,
     required this.keyboard,
     required this.icon,
   });
+
+  /// The type of the keyboard.
+  final KeyboardType type;
 
   /// The icon for the page.
   final String icon;
@@ -143,35 +148,10 @@ class KeyboardPageConfig {
 
 /// Keyboard showing extended functionality.
 final keyboardMap = [
-  KeyboardPageConfig(keyboard: numberKeyboard, icon: numberKeyboardIcon),
-  KeyboardPageConfig(keyboard: symbolKeyboard, icon: symbolKeyboardIcon),
-  KeyboardPageConfig(keyboard: mathFunctionKeyboard, icon: mathFunctionKeyboardIcon),
-  KeyboardPageConfig(keyboard: greekKeyboard, icon: greekKeyboardIcon),
-  KeyboardPageConfig(keyboard: lowerCaseTextKeyboard, icon: lowerCaseTextKeyboardIcon),
-  KeyboardPageConfig(keyboard: upperCaseTextKeyboard, icon: upperCaseTextKeyboardIcon),
+  KeyboardPageConfig(type: KeyboardType.number, keyboard: numberKeyboard, icon: numberKeyboardIcon),
+  KeyboardPageConfig(type: KeyboardType.symbol, keyboard: symbolKeyboard, icon: symbolKeyboardIcon),
+  KeyboardPageConfig(type: KeyboardType.mathFunction, keyboard: mathFunctionKeyboard, icon: mathFunctionKeyboardIcon),
+  KeyboardPageConfig(type: KeyboardType.greek, keyboard: greekKeyboard, icon: greekKeyboardIcon),
+  KeyboardPageConfig(type: KeyboardType.lowerCaseText, keyboard: lowerCaseTextKeyboard, icon: lowerCaseTextKeyboardIcon),
+  KeyboardPageConfig(type: KeyboardType.upperCaseText, keyboard: upperCaseTextKeyboard, icon: upperCaseTextKeyboardIcon),
 ];
-//   0: KeyboardPageConfig(
-//     keyboard: numberKeyboard,
-//     icon: numberKeyboardIcon,
-//   ),
-//   1: KeyboardPageConfig(
-//     keyboard: symbolKeyboard,
-//     icon: symbolKeyboardIcon,
-//   ),
-//   2: KeyboardPageConfig(
-//     keyboard: mathFunctionKeyboard,
-//     icon: mathFunctionKeyboardIcon,
-//   ),
-//   3: KeyboardPageConfig(
-//     keyboard: upperCaseTextKeyboard,
-//     icon: upperCaseTextKeyboardIcon,
-//   ),
-//   4: KeyboardPageConfig(
-//     keyboard: lowerCaseTextKeyboard,
-//     icon: lowerCaseTextKeyboardIcon,
-//   ),
-//   5: KeyboardPageConfig(
-//     keyboard: functionKeyboard,
-//     icon: functionKeyboardIcon,
-//   ),
-// };

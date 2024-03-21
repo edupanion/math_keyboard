@@ -143,6 +143,10 @@ class _MathFieldTextFieldExample extends StatelessWidget {
             child: MathField(
               variables: const ['α'],
               focusNode: focusNode,
+              recommendKeyboardTypes: [
+                KeyboardType.number,
+                KeyboardType.lowerCaseText,
+              ],
               onChanged: (value) {
                 String expression;
                 try {
@@ -154,39 +158,6 @@ class _MathFieldTextFieldExample extends StatelessWidget {
                 print('input expression: $value\n'
                     'converted expression: $expression');
               },
-            ),
-          ),
-          ColoredBox(
-            color: Colors.grey.shade200,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'The math field on this tab should automatically receive focus. ',
-                  style: TextStyle(
-                    // leadingDistribution: TextLeadingDistribution.even,
-                    fontSize: 20,
-                    height: 5,
-                    decorationStyle: TextDecorationStyle.dashed,
-                  ),
-                ),
-                const Text(
-                  '한글',
-                  style: TextStyle(
-                    // leadingDistribution: TextLeadingDistribution.even,
-                    fontSize: 20,
-                    height: 5,
-                  ),
-                ),
-                const Text(
-                  '123',
-                  style: TextStyle(
-                    // leadingDistribution: TextLeadingDistribution.even,
-                    fontSize: 20,
-                    height: 5,
-                  ),
-                ),
-              ],
             ),
           ),
         ],

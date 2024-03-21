@@ -10,6 +10,27 @@ import 'package:math_keyboard/src/widgets/decimal_separator.dart';
 import 'package:math_keyboard/src/widgets/math_keyboard.dart';
 import 'package:math_keyboard/src/widgets/view_insets.dart';
 
+/// Keyboard type.
+enum KeyboardType {
+  /// Number keyboard.
+  number,
+
+  /// Symbol keyboard.
+  symbol,
+
+  /// Math function keyboard.
+  mathFunction,
+
+  /// Greek letters keyboard.
+  greek,
+
+  /// Lower case text keyboard.
+  lowerCaseText,
+
+  /// Upper case text keyboard.
+  upperCaseText,
+}
+
 /// Widget that is like a [TextField] for math expressions.
 ///
 /// Instead of launching a software keyboard, it will launch a custom keyboard
@@ -27,6 +48,7 @@ class MathField extends StatefulWidget {
     this.onChanged,
     this.onSubmitted,
     this.opensKeyboard = true,
+    this.recommendKeyboardTypes = const [],
   }) : super(key: key);
 
   /// The controller for the math field.
@@ -115,6 +137,9 @@ class MathField extends StatefulWidget {
   ///
   /// Defaults to `true`.
   final bool opensKeyboard;
+
+  /// The keyboard types that were used recommended by the user.
+  final List<KeyboardType> recommendKeyboardTypes;
 
   @override
   _MathFieldState createState() => _MathFieldState();
@@ -330,6 +355,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
             // overlay context does not have the ancestor state.
             insetsState: MathKeyboardViewInsetsState.of(this.context),
             slideAnimation: _keyboardSlideController,
+            recommendKeyboardTypes: widget.recommendKeyboardTypes,
           ),
         );
       },

@@ -42,6 +42,7 @@ class MathKeyboard extends StatelessWidget {
       left: 4,
       right: 4,
     ),
+    this.recommendKeyboardTypes = const [],
   }) : super(key: key);
 
   /// The controller for editing the math field.
@@ -74,6 +75,9 @@ class MathKeyboard extends StatelessWidget {
   ///
   /// Defaults to `const EdgeInsets.only(bottom: 4, left: 4, right: 4),`.
   final EdgeInsets padding;
+
+  /// The recommended keyboard types.
+  final List<KeyboardType> recommendKeyboardTypes;
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +122,7 @@ class MathKeyboard extends StatelessWidget {
                                 variables: variables,
                                 scrollController: _scrollController,
                                 pages: keyboardPages,
+                                recommendKeyboardTypes: recommendKeyboardTypes,
                               ),
                               _Buttons(
                                 scrollController: _scrollController,
@@ -232,6 +237,7 @@ class _Categories extends StatefulWidget {
     required this.variables,
     required this.pages,
     this.scrollController,
+    this.recommendKeyboardTypes = const [],
   }) : super(key: key);
 
   /// The editing controller for the math field that the variables are connected
@@ -244,6 +250,8 @@ class _Categories extends StatefulWidget {
   final List<KeyboardPageConfig> pages;
 
   final ScrollController? scrollController;
+
+  final List<KeyboardType> recommendKeyboardTypes;
 
   @override
   State<_Categories> createState() => _CategoriesState();
@@ -289,6 +297,8 @@ class _CategoriesState extends State<_Categories> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.recommendKeyboardTypes);
+
     return Container(
       height: 54,
       width: double.infinity,
@@ -298,9 +308,42 @@ class _CategoriesState extends State<_Categories> {
         builder: (context, child) {
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                ...widget.recommendKeyboardTypes.map((type) {
+                  final keyboard = widget.pages.firstWhere((page) => page.type == type);
+
+                  return _CategoryButton(
+                    name: keyboard.icon,
+                    isRecommended: true,
+                    selected: _selected == widget.pages.indexOf(keyboard),
+                    onTap: () async {
+                      if (_moved?.isCompleted == false) return;
+
+                      setState(() {
+                        _selected = widget.pages.indexOf(keyboard);
+                      });
+
+                      _moved = Completer();
+
+                      await Scrollable.ensureVisible(
+                        keyboard.key.currentContext!,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+
+                      _moved?.complete();
+                    },
+                  );
+                }),
+                if (widget.recommendKeyboardTypes.isNotEmpty)
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    color: Colors.white,
+                  ),
                 for (int i = 0; i < widget.pages.length; i++)
                   _CategoryButton(
                     name: widget.pages[i].icon,
@@ -574,6 +617,7 @@ class _CategoryButton extends StatefulWidget {
     required this.name,
     required this.selected,
     this.onTap,
+    this.isRecommended = false,
   }) : super(key: key);
 
   /// The variable name.
@@ -585,6 +629,9 @@ class _CategoryButton extends StatefulWidget {
   /// Called when the button is tapped.
   final VoidCallback? onTap;
 
+  /// Whether the button is recommended.
+  final bool isRecommended;
+
   @override
   State<_CategoryButton> createState() => _CategoryButtonState();
 }
@@ -594,6 +641,12 @@ class _CategoryButtonState extends State<_CategoryButton> {
 
   @override
   Widget build(BuildContext context) {
+    final color = switch (widget.isRecommended) {
+      true when widget.selected || _pressed => Color(0xFFFCF6E6),
+      false when widget.selected || _pressed => Color(0xFFF4F6FA),
+      _ => Color(0xFFE5E8F0),
+    };
+
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
@@ -605,10 +658,10 @@ class _CategoryButtonState extends State<_CategoryButton> {
       child: AnimatedContainer(
         height: 40,
         duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.only(left: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 4),
         constraints: const BoxConstraints(minWidth: 44),
         decoration: BoxDecoration(
-          color: widget.selected || _pressed ? Color(0xFFF4F6FA) : Color(0xFFE5E8F0),
+          color: color,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
