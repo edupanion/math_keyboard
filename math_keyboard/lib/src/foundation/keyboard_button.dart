@@ -150,7 +150,7 @@ class KeyboardPageConfig {
 final keyboardMap = [
   KeyboardPageConfig(type: KeyboardType.number, keyboard: numberKeyboard, icon: numberKeyboardIcon),
   KeyboardPageConfig(type: KeyboardType.symbol, keyboard: symbolKeyboard, icon: symbolKeyboardIcon),
-  KeyboardPageConfig(type: KeyboardType.mathFunction, keyboard: mathFunctionKeyboard, icon: mathFunctionKeyboardIcon),
+  // KeyboardPageConfig(type: KeyboardType.mathFunction, keyboard: mathFunctionKeyboard, icon: mathFunctionKeyboardIcon),
   KeyboardPageConfig(type: KeyboardType.greek, keyboard: greekKeyboard, icon: greekKeyboardIcon),
   KeyboardPageConfig(type: KeyboardType.lowerCaseText, keyboard: lowerCaseTextKeyboard, icon: lowerCaseTextKeyboardIcon),
   KeyboardPageConfig(type: KeyboardType.upperCaseText, keyboard: upperCaseTextKeyboard, icon: upperCaseTextKeyboardIcon),
