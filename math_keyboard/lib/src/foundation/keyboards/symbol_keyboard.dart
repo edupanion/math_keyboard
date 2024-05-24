@@ -75,11 +75,11 @@ final symbolKeyboard = [
   [
     const BasicKeyboardButtonConfig(
       label: r'>',
-      value: r'>',
+      value: r'\gt',
     ),
     const BasicKeyboardButtonConfig(
       label: r'<',
-      value: r'<',
+      value: r'/lt',
     ),
     const BasicKeyboardButtonConfig(
       label: r'\ge',
