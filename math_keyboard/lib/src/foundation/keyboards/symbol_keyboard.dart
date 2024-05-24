@@ -79,7 +79,7 @@ final symbolKeyboard = [
     ),
     const BasicKeyboardButtonConfig(
       label: r'<',
-      value: r'/lt',
+      value: r'\lt',
     ),
     const BasicKeyboardButtonConfig(
       label: r'\ge',
